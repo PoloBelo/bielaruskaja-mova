@@ -214,10 +214,25 @@ function renderDictionary(query) {
   matches.forEach(entry => container.appendChild(buildEntry(entry, o, q)));
 }
 
+/* ── Latin forms derived from Cyrillic via cyrToLat() ──────────────────
+   getVariant / getExample compute LN and LT on the fly so they always
+   match the Cyrillic source; stored ln/lt keys in data are ignored.     */
+function getVariant(entry, key) {
+  if (key === 'ln') return cyrToLat(entry.variants.cn, false);
+  if (key === 'lt') return cyrToLat(entry.variants.ct, true);
+  return entry.variants[key];
+}
+
+function getExample(entry, key) {
+  if (key === 'ln') return cyrToLat(entry.example.cn, false);
+  if (key === 'lt') return cyrToLat(entry.example.ct, true);
+  return entry.example[key];
+}
+
 function entryMatches(entry, q) {
   if (entry.en.toLowerCase().includes(q)) return true;
-  for (const key of ['cn','ct','ln','lt']) {
-    if (entry.variants[key].toLowerCase().includes(q)) return true;
+  for (const key of ['cn', 'ct', 'ln', 'lt']) {
+    if (getVariant(entry, key).toLowerCase().includes(q)) return true;
   }
   return false;
 }
@@ -228,7 +243,7 @@ function buildEntry(entry, o, q) {
 
   /* Top row: headword + POS */
   const top = el('div', 'dict-entry-top');
-  const hw = el('span', 'dict-headword', hl(entry.variants[o], q));
+  const hw  = el('span', 'dict-headword', hl(getVariant(entry, o), q));
   const pos = el('span', 'dict-pos', entry.pos);
   top.appendChild(hw);
   top.appendChild(pos);
@@ -237,20 +252,20 @@ function buildEntry(entry, o, q) {
   /* English definition */
   card.appendChild(el('p', 'dict-definition', entry.en));
 
-  /* Orthography variants */
-  const varWrap = el('div', 'dict-variants');
-  const orthoOrder = ['cn','ct','ln','lt'];
+  /* Orthography variant pills */
+  const varWrap     = el('div', 'dict-variants');
+  const orthoOrder  = ['cn', 'ct', 'ln', 'lt'];
   const shortLabels = { cn:'Cyr. Nark.', ct:'Cyr. Tarak.', ln:'Lat. Nark.', lt:'Lat. Tarak.' };
   orthoOrder.forEach(key => {
     const pill = el('span', 'dict-variant' + (key === o ? ' active-variant' : ''));
-    pill.innerHTML = `<span class="variant-label">${shortLabels[key]}</span>${esc(entry.variants[key])}`;
+    pill.innerHTML = `<span class="variant-label">${shortLabels[key]}</span>${esc(getVariant(entry, key))}`;
     varWrap.appendChild(pill);
   });
   card.appendChild(varWrap);
 
   /* Example sentence */
-  const exDiv = el('div', 'dict-example');
-  const exText = el('span', '', entry.example[o]);
+  const exDiv  = el('div', 'dict-example');
+  const exText = el('span', '', getExample(entry, o));
   const exTrans = el('span', 'example-trans', ' — ' + entry.trans);
   exDiv.appendChild(exText);
   exDiv.appendChild(exTrans);
