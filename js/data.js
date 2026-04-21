@@ -1020,3 +1020,110 @@ const DICTIONARY = [
     trans: 'I hear a strange sound.'
   },
 ];
+
+/* ════════════════════════════════════════════════════════════════════════
+   CYRILLIC → ŁACINKA TRANSLITERATOR
+   cyrToLat(text, isTarak)
+     isTarak=false  →  Narkamaŭka Łacinka  (ь before consonant = silent)
+     isTarak=true   →  Taraškievica Łacinka (ь before consonant = diacritic)
+   ════════════════════════════════════════════════════════════════════════ */
+
+function cyrToLat(text, isTarak) {
+  const VOWELS = new Set([...'аеёіоуыэюяАЕЁІОУЫЭЮЯ']);
+  const IS_CYR = /[а-яёіўА-ЯЁІЎь]/;
+
+  const BASE = {
+    а:'a', б:'b', в:'v', г:'h', д:'d',
+    ж:'ž', з:'z', і:'i', й:'j', к:'k',
+    л:'l', м:'m', н:'n', о:'o', п:'p',
+    р:'r', с:'s', т:'t', у:'u', ў:'ŭ',
+    ф:'f', ц:'c', ч:'č', ш:'š', ы:'y', э:'e',
+  };
+
+  const SOFT = {
+    s:'ś', S:'Ś', z:'ź', Z:'Ź', c:'ć', C:'Ć',
+    n:'ń', N:'Ń', l:'ĺ', L:'Ĺ',
+  };
+
+  function softenLast(res) {
+    for (let i = res.length - 1; i >= 0; i--) {
+      const chunk = res[i];
+      const last  = chunk[chunk.length - 1];
+      if (SOFT[last]) { res[i] = chunk.slice(0, -1) + SOFT[last]; return; }
+      if (/[a-zA-ZčšžŽŠČŭ]/.test(last)) { res.push("'"); return; }
+    }
+  }
+
+  const chars = [...text];
+  const res   = [];
+
+  for (let i = 0; i < chars.length; i++) {
+    const c  = chars[i];
+    const lc = c.toLowerCase();
+    const up = c !== lc;
+
+    const prev      = i > 0 ? chars[i - 1] : '';
+    const prevIsVow = VOWELS.has(prev);
+    const prevIsCyr = IS_CYR.test(prev);
+    const wordStart = !prevIsCyr || prev === 'ь';
+
+    /* Digraphs: дж, дзь, дз */
+    if (lc === 'д' && i + 1 < chars.length) {
+      const n1 = chars[i + 1].toLowerCase();
+      if (n1 === 'ж') { res.push(up ? 'Dž' : 'dž'); i++; continue; }
+      if (n1 === 'з') {
+        if (i + 2 < chars.length && chars[i + 2] === 'ь') {
+          res.push(up ? 'Dź' : 'dź'); i += 2; continue;
+        }
+        res.push(up ? 'Dz' : 'dz'); i++; continue;
+      }
+    }
+
+    /* х → ch */
+    if (lc === 'х') { res.push(up ? 'Ch' : 'ch'); continue; }
+
+    /* Soft sign ь */
+    if (c === 'ь') {
+      const nextCh     = i + 1 < chars.length ? chars[i + 1] : '';
+      const nextIsVow  = VOWELS.has(nextCh);
+      const nextIsCons = IS_CYR.test(nextCh) && !nextIsVow && nextCh !== 'ь';
+      if (nextIsVow)              { res.push("'"); continue; }
+      if (nextIsCons && !isTarak) { continue; }          /* Nark: silent */
+      softenLast(res); continue;                          /* Tarak or final */
+    }
+
+    /* Belarusian apostrophe (hard separator) */
+    if (c === "'" || c === '’' || c === 'ʼ') {
+      res.push("'"); continue;
+    }
+
+    /* Iotated vowels — two-letter output, context-sensitive */
+    if (lc === 'е') {
+      const v = (wordStart || prevIsVow) ? 'je' : 'ie';
+      res.push(up ? v[0].toUpperCase() + v[1] : v); continue;
+    }
+    if (lc === 'ё') {
+      const v = (wordStart || prevIsVow) ? 'jo' : 'io';
+      res.push(up ? v[0].toUpperCase() + v[1] : v); continue;
+    }
+    if (lc === 'ю') {
+      const v = (wordStart || prevIsVow) ? 'ju' : 'iu';
+      res.push(up ? v[0].toUpperCase() + v[1] : v); continue;
+    }
+    if (lc === 'я') {
+      const v = (wordStart || prevIsVow) ? 'ja' : 'ia';
+      res.push(up ? v[0].toUpperCase() + v[1] : v); continue;
+    }
+
+    /* Simple one-to-one */
+    if (BASE[lc] !== undefined) {
+      const lat = BASE[lc];
+      res.push(up ? lat[0].toUpperCase() + lat.slice(1) : lat); continue;
+    }
+
+    /* Pass through: spaces, punctuation, digits, already-Latin chars */
+    res.push(c);
+  }
+
+  return res.join('');
+}
