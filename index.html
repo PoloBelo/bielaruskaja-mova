@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biełaruskaja Mova — Belarusian Language Reference</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-identity">
+        <h1 class="site-title">Biełaruskaja Mova</h1>
+        <p class="site-subtitle">A Reference for the Belarusian Language</p>
+      </div>
+      <nav class="main-nav" aria-label="Main sections">
+        <button class="nav-btn active" data-section="grammar">
+          <span lang="be">Граматыка</span>
+          <span class="nav-en">Grammar</span>
+        </button>
+        <button class="nav-btn" data-section="dictionary">
+          <span lang="be">Слоўнік</span>
+          <span class="nav-en">Dictionary</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="ortho-bar" role="region" aria-label="Orthography selector">
+    <div class="ortho-bar-inner">
+      <span class="ortho-label">Orthography:</span>
+      <div class="ortho-options" role="radiogroup" aria-label="Select orthography">
+        <label class="ortho-option">
+          <input type="radio" name="ortho" value="cn" checked>
+          <span class="ortho-name">Cyrillic Narkamaŭka</span>
+          <span class="ortho-sub">Кірыліца · official</span>
+        </label>
+        <label class="ortho-option">
+          <input type="radio" name="ortho" value="ct">
+          <span class="ortho-name">Cyrillic Taraškievica</span>
+          <span class="ortho-sub">Тарашкевіца · classical</span>
+        </label>
+        <label class="ortho-option">
+          <input type="radio" name="ortho" value="ln">
+          <span class="ortho-name">Latin Narkamaŭka</span>
+          <span class="ortho-sub">Łacinka · official</span>
+        </label>
+        <label class="ortho-option">
+          <input type="radio" name="ortho" value="lt">
+          <span class="ortho-name">Latin Taraškievica</span>
+          <span class="ortho-sub">Łacinka · classical</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+
+    <!-- ── Grammar ── -->
+    <section id="section-grammar" class="content-section active" aria-label="Grammar">
+      <div class="grammar-tabs" role="tablist" aria-label="Grammar topics">
+        <button class="tab-btn active" role="tab" aria-selected="true"  data-topic="alphabet">Alphabet &amp; Phonology</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-topic="nouns">Noun Declension</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-topic="verbs">Verb Conjugation</button>
+      </div>
+      <div id="grammar-content" class="grammar-content-area" role="tabpanel"></div>
+    </section>
+
+    <!-- ── Dictionary ── -->
+    <section id="section-dictionary" class="content-section" aria-label="Dictionary">
+      <div class="dictionary-header">
+        <div class="search-wrap">
+          <label for="search-input" class="sr-only">Search the dictionary</label>
+          <input type="search" id="search-input"
+                 placeholder="Search Belarusian words or English definitions…"
+                 autocomplete="off" spellcheck="false">
+          <span class="search-icon" aria-hidden="true">&#128269;</span>
+        </div>
+        <p class="search-hint">Search any orthography variant or English definition</p>
+      </div>
+      <div id="dictionary-results" class="dictionary-results" aria-live="polite"></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Biełaruskaja Mova Reference &mdash; Belarusian linguistics, all four orthographies</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
