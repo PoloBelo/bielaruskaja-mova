@@ -75,12 +75,12 @@ function renderGrammar() {
 function buildAlphabetSection(o) {
   const div = el('div', 'grammar-content-area');
 
-  div.appendChild(topicHeading(ALPHABET.title[o], ALPHABET.subtitle, o));
+  div.appendChild(topicHeading(gramLat(ALPHABET.title.cn, ALPHABET.title.ct, o), ALPHABET.subtitle, o));
   div.appendChild(introBlock(ALPHABET.intro));
 
   /* Letter table */
   const block = el('div', 'grammar-block');
-  const cap = el('h3', 'grammar-block-title', ALPHABET.tableCaption[o]);
+  const cap = el('h3', 'grammar-block-title', gramLat(ALPHABET.tableCaption.cn, ALPHABET.tableCaption.ct, o));
   block.appendChild(cap);
 
   const isCyrillic = o === 'cn' || o === 'ct';
@@ -98,7 +98,7 @@ function buildAlphabetSection(o) {
     thead = ['Letter (Latin)','IPA','Cyrillic equiv.','Example'];
     rows = ALPHABET_ROWS.map(r => {
       const latinLetter = (o === 'ln') ? r[2] : r[3];
-      const exampleWord = (o === 'ln') ? r[6] : r[7];
+      const exampleWord = cyrToLat(o === 'ln' ? r[4] : r[5], o === 'lt');
       return [latinLetter, r[1], r[0], `<span class="alpha-example">${exampleWord}</span>`];
     });
     // Filter duplicate/combined entries for Latin view
@@ -123,18 +123,19 @@ function buildAlphabetSection(o) {
 /* ── Nouns ────────────────────────────────────────────────────────────── */
 function buildNounsSection(o) {
   const div = el('div');
-  div.appendChild(topicHeading(NOUNS.title[o], NOUNS.subtitle, o));
+  div.appendChild(topicHeading(gramLat(NOUNS.title.cn, NOUNS.title.ct, o), NOUNS.subtitle, o));
   div.appendChild(introBlock(NOUNS.intro));
 
   [NOUN_MASC, NOUN_FEM, NOUN_NEUT].forEach(paradigm => {
     const block = el('div', 'grammar-block');
-    const heading = `${paradigm.lemma[o]} — <span style="font-size:.85em;font-family:var(--font-ui);color:var(--ink-faint)">${paradigm.gloss}</span>`;
+    const lemmaText = gramLat(paradigm.lemma.cn, paradigm.lemma.ct, o);
+    const heading = `${lemmaText} — <span style="font-size:.85em;font-family:var(--font-ui);color:var(--ink-faint)">${paradigm.gloss}</span>`;
     const h3 = el('h3', 'grammar-block-title');
     h3.innerHTML = heading;
     block.appendChild(h3);
 
-    const forms = paradigm.forms[o];
-    const cases = CASE_NAMES[o];
+    const forms = gramLatForms(paradigm.forms.cn, paradigm.forms.ct, o);
+    const cases = gramLatArr(CASE_NAMES.cn, CASE_NAMES.ct, o);
     const thead = ['Case', 'Singular', 'Plural'];
     const rows = cases.map((c, i) => [c, forms[i][0], forms[i][1]]);
 
@@ -148,32 +149,34 @@ function buildNounsSection(o) {
 /* ── Verbs ────────────────────────────────────────────────────────────── */
 function buildVerbsSection(o) {
   const div = el('div');
-  div.appendChild(topicHeading(VERBS.title[o], VERBS.subtitle, o));
+  div.appendChild(topicHeading(gramLat(VERBS.title.cn, VERBS.title.ct, o), VERBS.subtitle, o));
   div.appendChild(introBlock(VERBS.intro));
 
   [VERB_CONJ1, VERB_CONJ2].forEach(verb => {
     const block = el('div', 'grammar-block');
-    const heading = `${verb.lemma[o]} — <span style="font-size:.85em;font-family:var(--font-ui);color:var(--ink-faint)">${verb.gloss}</span>`;
+    const heading = `${gramLat(verb.lemma.cn, verb.lemma.ct, o)} — <span style="font-size:.85em;font-family:var(--font-ui);color:var(--ink-faint)">${verb.gloss}</span>`;
     const h3 = el('h3', 'grammar-block-title');
     h3.innerHTML = heading;
     block.appendChild(h3);
 
     /* Present tense */
-    const presHead = el('p', 'grammar-block-subhead', VERBS.pres_head[o]);
+    const presHead = el('p', 'grammar-block-subhead', gramLat(VERBS.pres_head.cn, VERBS.pres_head.ct, o));
     presHead.style.cssText = 'font-family:var(--font-ui);font-size:.80rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:.4rem;';
     block.appendChild(presHead);
 
-    const persons = PERSON_LABELS[o];
-    const presRows = persons.map((p, i) => [p, verb.pres[o][i]]);
+    const persons = gramLatArr(PERSON_LABELS.cn, PERSON_LABELS.ct, o);
+    const presForms = gramLatArr(verb.pres.cn, verb.pres.ct, o);
+    const presRows = persons.map((p, i) => [p, presForms[i]]);
     block.appendChild(wrapTable(buildTable(['Person / Pronoun', 'Form'], presRows, 'ref-table')));
 
     /* Past tense */
-    const pastHead = el('p', 'grammar-block-subhead', VERBS.past_head[o]);
+    const pastHead = el('p', 'grammar-block-subhead', gramLat(VERBS.past_head.cn, VERBS.past_head.ct, o));
     pastHead.style.cssText = 'font-family:var(--font-ui);font-size:.80rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin:.9rem 0 .4rem;';
     block.appendChild(pastHead);
 
-    const pastLabels = PAST_LABELS[o];
-    const pastRows = pastLabels.map((l, i) => [l, verb.past[o][i]]);
+    const pastLabels = gramLatArr(PAST_LABELS.cn, PAST_LABELS.ct, o);
+    const pastForms = gramLatArr(verb.past.cn, verb.past.ct, o);
+    const pastRows = pastLabels.map((l, i) => [l, pastForms[i]]);
     block.appendChild(wrapTable(buildTable(['Gender / Number', 'Past form'], pastRows, 'ref-table')));
 
     div.appendChild(block);
@@ -271,7 +274,57 @@ function buildEntry(entry, o, q) {
   exDiv.appendChild(exTrans);
   card.appendChild(exDiv);
 
+  /* Paradigm toggle */
+  if (entry.decl) {
+    const btn = el('button', 'decl-toggle', 'Paradigm ▾');
+    const section = buildDeclSection(entry, o);
+    section.style.display = 'none';
+    btn.addEventListener('click', () => {
+      const open = section.style.display !== 'none';
+      section.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Paradigm ▾' : 'Paradigm ▲';
+    });
+    card.appendChild(btn);
+    card.appendChild(section);
+  }
+
   return card;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Dictionary declension / conjugation tables
+   ════════════════════════════════════════════════════════════════════════ */
+function buildDeclSection(entry, o) {
+  if (!entry.decl) return null;
+  const { type, cn, ct } = entry.decl;
+  const src = (o === 'ct' && ct) ? ct : cn;
+  const isTarak = o === 'lt';
+  const forms = arr => (o === 'ln' || o === 'lt') ? arr.map(f => cyrToLat(f, isTarak)) : arr;
+
+  const wrap = el('div', 'dict-decl');
+
+  if (type === 'n') {
+    const cases = gramLatArr(CASE_NAMES.cn, CASE_NAMES.ct, o);
+    const sg = forms(src.sg);
+    const pl = forms(src.pl);
+    const rows = cases.map((c, i) => [c, sg[i], pl[i]]);
+    wrap.appendChild(wrapTable(buildTable(['Case', 'Singular', 'Plural'], rows, 'ref-table decl-table')));
+  } else {
+    const ph = el('p', '', gramLat(VERBS.pres_head.cn, VERBS.pres_head.ct, o));
+    ph.style.cssText = 'font-family:var(--font-ui);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin-bottom:.35rem;';
+    wrap.appendChild(ph);
+    const persons = gramLatArr(PERSON_LABELS.cn, PERSON_LABELS.ct, o);
+    const pf = forms(src.pres);
+    wrap.appendChild(wrapTable(buildTable(['Person / Pronoun', 'Form'], persons.map((p, i) => [p, pf[i]]), 'ref-table decl-table')));
+
+    const pastH = el('p', '', gramLat(VERBS.past_head.cn, VERBS.past_head.ct, o));
+    pastH.style.cssText = 'font-family:var(--font-ui);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);margin:.65rem 0 .35rem;';
+    wrap.appendChild(pastH);
+    const pastLbls = gramLatArr(PAST_LABELS.cn, PAST_LABELS.ct, o);
+    const pastF = forms(src.past);
+    wrap.appendChild(wrapTable(buildTable(['Gender / Number', 'Past form'], pastLbls.map((l, i) => [l, pastF[i]]), 'ref-table decl-table')));
+  }
+  return wrap;
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -292,6 +345,22 @@ function hl(text, q) {
   if (!q) return esc(text);
   const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
   return esc(text).replace(re, m => `<mark class="match-hl">${m}</mark>`);
+}
+
+function gramLat(cn, ct, o) {
+  if (o === 'ln') return cyrToLat(cn, false);
+  if (o === 'lt') return cyrToLat(ct, true);
+  return o === 'cn' ? cn : ct;
+}
+function gramLatArr(cnArr, ctArr, o) {
+  if (o === 'ln') return cnArr.map(s => cyrToLat(s, false));
+  if (o === 'lt') return ctArr.map(s => cyrToLat(s, true));
+  return o === 'cn' ? cnArr : ctArr;
+}
+function gramLatForms(cnForms, ctForms, o) {
+  if (o === 'ln') return cnForms.map(p => p.map(f => cyrToLat(f, false)));
+  if (o === 'lt') return ctForms.map(p => p.map(f => cyrToLat(f, true)));
+  return o === 'cn' ? cnForms : ctForms;
 }
 
 function topicHeading(title, subtitle, o) {

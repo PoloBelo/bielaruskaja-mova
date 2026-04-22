@@ -204,7 +204,8 @@ const DICTIONARY = [
     en: 'language; tongue; speech',
     variants: { cn:'мова', ct:'мова', ln:'mova', lt:'mova' },
     example:  { cn:'Беларуская мова прыгожая.',    ct:'Беларуская мова прыгожая.',    ln:'Bielaruskaja mova pryhožaja.',    lt:'Bielaruskaja mova pryhožaja.' },
-    trans: 'The Belarusian language is beautiful.'
+    trans: 'The Belarusian language is beautiful.',
+    decl: { type:'n', cn:{ sg:['мова','мовы','мове','мову','мовай','мове','мова'], pl:['мовы','моваў','мовам','мовы','мовамі','мовах','мовы'] } }
   },
   {
     id: 2,
@@ -212,7 +213,8 @@ const DICTIONARY = [
     en: 'book',
     variants: { cn:'кніга', ct:'кніга', ln:'kniha', lt:'kniha' },
     example:  { cn:'Я чытаю цікавую кнігу.',  ct:'Я чытаю цікавую кнігу.',  ln:'Ja čytaju cikavuju knihu.',  lt:'Ja čytaju cikavuju knihu.' },
-    trans: 'I am reading an interesting book.'
+    trans: 'I am reading an interesting book.',
+    decl: { type:'n', cn:{ sg:['кніга','кнігі','кнізе','кнігу','кнігай','кнізе','кніга'], pl:['кнігі','кніг','кнігам','кнігі','кнігамі','кнігах','кнігі'] } }
   },
   {
     id: 3,
@@ -244,7 +246,8 @@ const DICTIONARY = [
     en: 'time; hour; period',
     variants: { cn:'час', ct:'час', ln:'čas', lt:'čas' },
     example:  { cn:'У нас мала часу.',  ct:'У нас мала часу.',  ln:'U nas mała času.',  lt:'U nas mała času.' },
-    trans: 'We have little time.'
+    trans: 'We have little time.',
+    decl: { type:'n', cn:{ sg:['час','часу','часу','час','часам','часе','часе'], pl:['часы','часоў','часам','часы','часамі','часах','часы'] } }
   },
   {
     id: 7,
@@ -252,7 +255,8 @@ const DICTIONARY = [
     en: 'day; daytime',
     variants: { cn:'дзень', ct:'дзень', ln:'dzień', lt:'dzień' },
     example:  { cn:'Добры дзень!',  ct:'Добры дзень!',  ln:'Dobry dzień!',  lt:'Dobry dzień!' },
-    trans: '"Good day!" — standard greeting.'
+    trans: '"Good day!" — standard greeting.',
+    decl: { type:'n', cn:{ sg:['дзень','дня','дню','дзень','днём','дні','дзень'], pl:['дні','дзён','дням','дні','днямі','днях','дні'] } }
   },
   {
     id: 8,
@@ -376,7 +380,8 @@ const DICTIONARY = [
     en: 'to live; to reside; to exist',
     variants: { cn:'жыць', ct:'жыць', ln:'žyć', lt:'žyć' },
     example:  { cn:'Я жыву ў Беларусі.',  ct:'Я жыву ў Беларусі.',  ln:'Ja žyvu ŭ Bielarusi.',  lt:'Ja žyvu ŭ Bielarusi.' },
-    trans: 'I live in Belarus.'
+    trans: 'I live in Belarus.',
+    decl: { type:'v', cn:{ pres:['жыву','жывеш','жыве','жывём','жывяце','жывуць'], past:['жыў','жыла','жыло','жылі'] } }
   },
   {
     id: 23,
@@ -384,7 +389,8 @@ const DICTIONARY = [
     en: 'to know; to be aware of',
     variants: { cn:'ведаць', ct:'ведаць', ln:'viedać', lt:'viedać' },
     example:  { cn:'Я ведаю беларускую мову.',  ct:'Я ведаю беларускую мову.',  ln:'Ja viedaju bielaruskuju movu.',  lt:'Ja viedaju bielaruskuju movu.' },
-    trans: 'I know the Belarusian language.'
+    trans: 'I know the Belarusian language.',
+    decl: { type:'v', cn:{ pres:['ведаю','ведаеш','ведае','ведаем','ведаеце','ведаюць'], past:['ведаў','ведала','ведала','ведалі'] } }
   },
   {
     id: 24,
@@ -392,7 +398,8 @@ const DICTIONARY = [
     en: 'to speak; to talk; to say',
     variants: { cn:'гаварыць', ct:'гаварыць', ln:'havaryć', lt:'havaryć' },
     example:  { cn:'Ён гаворыць па-беларуску.',  ct:'Ён гаворыць па-беларуску.',  ln:'Jon havoryć pa-bielarusku.',  lt:'Jon havoryć pa-bielarusku.' },
-    trans: 'He speaks Belarusian.'
+    trans: 'He speaks Belarusian.',
+    decl: { type:'v', cn:{ pres:['гавару','гаворыш','гаворыць','гаворым','гаворыце','гавораць'], past:['гаварыў','гаварыла','гаварыла','гаварылі'] } }
   },
   {
     id: 25,
@@ -400,7 +407,8 @@ const DICTIONARY = [
     en: 'to read',
     variants: { cn:'чытаць', ct:'чытаць', ln:'čytać', lt:'čytać' },
     example:  { cn:'Яна чытае газету.',  ct:'Яна чытае газэту.',  ln:'Jana čytaje hazetu.',  lt:'Jana čytaje hazetu.' },
-    trans: 'She is reading a newspaper.'
+    trans: 'She is reading a newspaper.',
+    decl: { type:'v', cn:{ pres:['чытаю','чытаеш','чытае','чытаем','чытаеце','чытаюць'], past:['чытаў','чытала','чытала','чыталі'] } }
   },
   {
     id: 26,
@@ -424,7 +432,8 @@ const DICTIONARY = [
     en: 'to do; to make; to perform',
     variants: { cn:'рабіць', ct:'рабіць', ln:'rabić', lt:'rabić' },
     example:  { cn:'Ён робіць сваю работу.',  ct:'Ён робіць сваю работу.',  ln:'Jon robić svaju rabotu.',  lt:'Jon robić svaju rabotu.' },
-    trans: 'He is doing his work.'
+    trans: 'He is doing his work.',
+    decl: { type:'v', cn:{ pres:['раблю','робіш','робіць','робім','робіце','робяць'], past:['рабіў','рабіла','рабіла','рабілі'] } }
   },
   {
     id: 29,
@@ -440,7 +449,8 @@ const DICTIONARY = [
     en: 'word; utterance',
     variants: { cn:'слова', ct:'слова', ln:'slova', lt:'slova' },
     example:  { cn:'Гэта прыгожае слова.',  ct:'Гэта прыгожае слова.',  ln:'Heta pryhožaje slova.',  lt:'Heta pryhožaje slova.' },
-    trans: 'This is a beautiful word.'
+    trans: 'This is a beautiful word.',
+    decl: { type:'n', cn:{ sg:['слова','слова','слову','слова','словам','слове','слова'], pl:['словы','слоў','словам','словы','словамі','словах','словы'] } }
   },
 
   /* ── Body parts ── */

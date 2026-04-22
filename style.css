@@ -497,6 +497,29 @@ body {
 /* highlight matched text */
 .match-hl { background: var(--highlight); border-radius: 2px; }
 
+/* ── Paradigm toggle & inline declension table ── */
+.decl-toggle {
+  background: none;
+  border: 1px solid var(--rule-dark);
+  border-radius: var(--radius);
+  font-family: var(--font-ui);
+  font-size: 0.73rem;
+  color: var(--ink-faint);
+  padding: 0.18rem 0.6rem;
+  cursor: pointer;
+  margin-top: 0.55rem;
+  transition: border-color .15s, color .15s;
+}
+.decl-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+.dict-decl { margin-top: 0.6rem; }
+
+.decl-table { font-size: 0.83rem; }
+.decl-table thead th { font-size: 0.68rem; padding: 0.45rem 0.75rem; }
+.decl-table tbody td { padding: 0.45rem 0.75rem; }
+.decl-table tbody td:first-child { width: 110px; font-size: 0.70rem; }
+.decl-table tbody td:not(:first-child) { font-size: 0.88rem; text-align: left !important; }
+
 /* ── Footer ── */
 .site-footer {
   background: var(--paper-warm);
